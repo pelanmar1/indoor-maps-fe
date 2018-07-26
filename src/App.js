@@ -9,6 +9,8 @@ import { SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/utiliti
 import { CommandBar, ICommandBarProps } from 'office-ui-fabric-react/lib/CommandBar';
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
 import { Label } from 'office-ui-fabric-react/lib/Label';
+import { Modal } from 'office-ui-fabric-react/lib/Modal';
+
 
 
 import './App.css';
@@ -18,8 +20,8 @@ import Cookies from 'universal-cookie';
 
 
 initializeIcons();
-//const URL = "http://localhost:5000"
-const URL = "https://floo-be.azurewebsites.net"
+const URL = "http://localhost:5000"
+//const URL = "https://floo-be.azurewebsites.net"
 
 const cookies = new Cookies();
 
@@ -35,7 +37,10 @@ class App extends Component {
       "showSettingsPanel":false,
       "defaults":{},
       "closestSelectedConference":false,
-      "closestSelectedFocus":false
+      "closestSelectedFocus":false,
+      "showModal": false,
+      "disableInstructions":true,
+      "directions":""
     }
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
@@ -46,6 +51,8 @@ class App extends Component {
     this.loadDefaultSettings = this.loadDefaultSettings.bind(this)
     this._onCheckbox2Change = this._onCheckbox2Change.bind(this)
     this._onCheckbox1Change = this._onCheckbox1Change.bind(this)
+    this._showModal = this._showModal.bind(this)
+    this._closeModal = this._closeModal.bind(this)
 
   }
 
@@ -82,7 +89,7 @@ class App extends Component {
   run(e){
     if(!this.state.start){
       alert("Please check your input.")
-    }
+    }else{
     if(this.state.closestSelectedConference){
       this.setState({url:URL+'/drawPathClosest?start='+this.state.start +"&end_type=Conference"})  
     }else if (this.state.closestSelectedFocus){
@@ -90,6 +97,14 @@ class App extends Component {
     }else{
       this.setState({url:URL+'/drawPath?start='+this.state.start +"&end="+this.state.end})
     }
+    let url= URL+'/directions?start='+this.state.start +"&end="+this.state.end
+    axios.get(url)
+    .then(response => {
+      if(response.data){
+        this.setState({directions:response.data,disableInstructions:false})
+      }
+    })
+  }
   }
 
   componentWillMount(){
@@ -143,6 +158,13 @@ class App extends Component {
     });
     return options;
   }
+  _showModal() {
+    this.setState({ showModal: true });
+  };
+
+  _closeModal(){
+    this.setState({ showModal: false });
+  };
 
 
   render() {
@@ -201,6 +223,24 @@ class App extends Component {
             </div>
               <PrimaryButton text="Go" onClick={this.run} />    
               
+
+<div>
+        <DefaultButton   id="cr_instructions_btn" onClick={this._showModal} text="Show instructions" disabled={this.state.disableInstructions}/>
+        <Modal
+          isOpen={this.state.showModal}
+          onDismiss={this._closeModal}
+          isBlocking={false}
+          
+        >
+          <div className="ms-modalExample-header">
+            <span>Directions</span>
+          </div>
+          <div className="ms-modalExample-body">
+              {this.state.directions}
+          </div>
+        </Modal>
+      </div>
+
               <div>
                 <img id="map_img" src={this.state.url}/>
               </div>

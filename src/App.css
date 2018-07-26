@@ -53,3 +53,9 @@ cr_commandbar {
   text-align: center;
   display: inline
 }
+#cr_instructions_btn{
+  margin-top: 20px
+}
+.ms-modalExample-body{
+  padding: 200px
+}
