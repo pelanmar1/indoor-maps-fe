@@ -8,6 +8,8 @@ import { ComboBox} from 'office-ui-fabric-react/lib/ComboBox';
 import { SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/utilities/selectableOption/SelectableOption.types';
 import { CommandBar, ICommandBarProps } from 'office-ui-fabric-react/lib/CommandBar';
 import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
+import { Label } from 'office-ui-fabric-react/lib/Label';
+
 
 import './App.css';
 import axios from 'axios';
@@ -31,7 +33,8 @@ class App extends Component {
       "end":"",
       "options":[],
       "showSettingsPanel":false,
-      "defaults":{}
+      "defaults":{},
+      "closestSelected":false
     }
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
@@ -40,7 +43,7 @@ class App extends Component {
     this._closeSettingsPanel = this._closeSettingsPanel.bind(this)
     this._toggleSettingsPanel = this._toggleSettingsPanel.bind(this)
     this.loadDefaultSettings = this.loadDefaultSettings.bind(this)
-
+    this._onCheckboxChange = this._onCheckboxChange.bind(this)
   }
 
 /* ------ Settings Panel ------ */  
@@ -83,6 +86,13 @@ class App extends Component {
       this.setState({options:this.formatDropdownOptions(response.data)})
     })
     this.loadDefaultSettings()
+  }
+
+  _onCheckboxChange(e){
+    console.log(e)
+    console.log(e.target)
+    //this.setState({closestSelected:})
+
   }
   
   
@@ -169,12 +179,11 @@ class App extends Component {
                     
               />
               <div>
-                
-              <div>
-        
-      </div>
+              <Label>Find closest:</Label>
+              <Checkbox className="cr_checkbox" label="Focus Room" onChange={this._onCheckboxChange}  />
+                <Checkbox className="cr_checkbox" label="Conference Room" onChange={this._onCheckboxChange}  />
       
-      </div>
+            </div>
               <PrimaryButton text="Go" onClick={this.run} />    
               
               <div>
