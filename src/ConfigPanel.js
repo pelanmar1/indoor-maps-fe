@@ -34,7 +34,7 @@ export class ConfigPanel extends React.Component {
         >
         <Dropdown
           placeHolder={defaultStart}
-          label="Set default location"
+          label="Set favorite location"
           id="Basicdrop1"
           ariaLabel="Basic dropdown example"
           options={items.concat(this.props.roomsList)}

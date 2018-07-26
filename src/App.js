@@ -18,8 +18,8 @@ import Cookies from 'universal-cookie';
 
 
 initializeIcons();
-const URL = "http://localhost:5000"
-//const URL = "https://floo-be.azurewebsites.net"
+//const URL = "http://localhost:5000"
+const URL = "https://floo-be.azurewebsites.net"
 
 const cookies = new Cookies();
 
@@ -34,7 +34,8 @@ class App extends Component {
       "options":[],
       "showSettingsPanel":false,
       "defaults":{},
-      "closestSelected":false
+      "closestSelectedConference":false,
+      "closestSelectedFocus":false
     }
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
@@ -43,7 +44,9 @@ class App extends Component {
     this._closeSettingsPanel = this._closeSettingsPanel.bind(this)
     this._toggleSettingsPanel = this._toggleSettingsPanel.bind(this)
     this.loadDefaultSettings = this.loadDefaultSettings.bind(this)
-    this._onCheckboxChange = this._onCheckboxChange.bind(this)
+    this._onCheckbox2Change = this._onCheckbox2Change.bind(this)
+    this._onCheckbox1Change = this._onCheckbox1Change.bind(this)
+
   }
 
 /* ------ Settings Panel ------ */  
@@ -77,7 +80,16 @@ class App extends Component {
   /* --------------------------- */
 
   run(e){
-    this.setState({url:URL+'/drawPath?start='+this.state.start +"&end="+this.state.end})
+    if(!this.state.start){
+      alert("Please check your input.")
+    }
+    if(this.state.closestSelectedConference){
+      this.setState({url:URL+'/drawPathClosest?start='+this.state.start +"&end_type=Conference"})  
+    }else if (this.state.closestSelectedFocus){
+      this.setState({url:URL+'/drawPathClosest?start='+this.state.start +"&end_type=Focus"})  
+    }else{
+      this.setState({url:URL+'/drawPath?start='+this.state.start +"&end="+this.state.end})
+    }
   }
 
   componentWillMount(){
@@ -88,10 +100,12 @@ class App extends Component {
     this.loadDefaultSettings()
   }
 
-  _onCheckboxChange(e){
-    console.log(e)
-    console.log(e.target)
-    //this.setState({closestSelected:})
+  _onCheckbox1Change(e){
+    this.setState({closestSelectedFocus:!this.state.closestSelectedFocus})
+
+  }
+  _onCheckbox2Change(e){
+    this.setState({closestSelectedConference:!this.state.closestSelectedConference})
 
   }
   
@@ -105,7 +119,7 @@ class App extends Component {
       return [];
     const options = []
     if(defaultStart){
-      options.push({ key: 'Default', text: "Default", itemType: SelectableOptionMenuItemType.Header })
+      options.push({ key: 'Default', text: "Favorites", itemType: SelectableOptionMenuItemType.Header })
       options.push({ key: _textToKey(defaultStart), text: this.state.defaults.start})
     }
     options.push({ key: 'Header', text: 'Room Name', itemType: SelectableOptionMenuItemType.Header })
@@ -172,6 +186,7 @@ class App extends Component {
               />
               <ComboBox className="cr_combobox"
                     allowFreeform={true}
+                    disabled = {this.state.closestSelectedFocus || this.state.closestSelectedConference}
                     autoComplete="on"
                     label="Where do you want to go?"
                     onChanged={this.handleEndChange}
@@ -180,8 +195,8 @@ class App extends Component {
               />
               <div>
               <Label>Find closest:</Label>
-              <Checkbox className="cr_checkbox" label="Focus Room" onChange={this._onCheckboxChange}  />
-                <Checkbox className="cr_checkbox" label="Conference Room" onChange={this._onCheckboxChange}  />
+              <Checkbox className="cr_checkbox" label="Focus Room" onChange={this._onCheckbox1Change}  />
+                <Checkbox className="cr_checkbox" label="Conference Room" onChange={this._onCheckbox2Change}  />
       
             </div>
               <PrimaryButton text="Go" onClick={this.run} />    
