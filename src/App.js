@@ -7,6 +7,8 @@ import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
 import { ComboBox} from 'office-ui-fabric-react/lib/ComboBox';
 import { SelectableOptionMenuItemType } from 'office-ui-fabric-react/lib/utilities/selectableOption/SelectableOption.types';
 import { CommandBar, ICommandBarProps } from 'office-ui-fabric-react/lib/CommandBar';
+import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
+
 import './App.css';
 import axios from 'axios';
 import {ConfigPanel} from './ConfigPanel'
@@ -14,8 +16,8 @@ import Cookies from 'universal-cookie';
 
 
 initializeIcons();
-//const URL = "http://10.106.252.39:5000"
-const URL = "https://floo-be.azurewebsites.net"
+const URL = "http://localhost:5000"
+//const URL = "https://floo-be.azurewebsites.net"
 
 const cookies = new Cookies();
 
@@ -122,23 +124,6 @@ class App extends Component {
   render() {
     let commandBarItems=[
       {
-        key: 'camera',
-        icon: 'Add',
-        name: 'Camera',
-        ariaLabel: 'New. Use left and right arrow keys to navigate',
-        onClick: () => {
-          return;
-        }
-      },
-      {
-        key: 'voice',
-        icon: 'Add',
-        name: 'Voice',
-        onClick: () => {
-          return;
-        }
-      },
-      {
         key: 'settings',
         icon: 'Add',
         name: 'Settings',
@@ -183,6 +168,13 @@ class App extends Component {
                     options={this.state.options}
                     
               />
+              <div>
+                
+              <div>
+        
+      </div>
+      
+      </div>
               <PrimaryButton text="Go" onClick={this.run} />    
               
               <div>
