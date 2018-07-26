@@ -14,7 +14,9 @@ import Cookies from 'universal-cookie';
 
 
 initializeIcons();
-const URL = "http://10.106.252.39:5000"
+//const URL = "http://10.106.252.39:5000"
+const URL = "https://floo-be.azurewebsites.net"
+
 const cookies = new Cookies();
 
 class App extends Component {
